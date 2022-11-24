@@ -49,7 +49,7 @@ psvae_folder = get_session_path(cbin_file).joinpath('spike_sorters', 'psvae', pn
 standardized_file = psvae_folder.joinpath(f"destriped_{cbin_file.name}").with_suffix('.bin')
 
 if not standardized_file.exists():
-    preprocessing.destripe_raw_binary(binary, standardized_file, reject_channels=not args.no_bad_channels)
+    preprocessing.destripe_raw_binary(cbin_file, standardized_file, reject_channels=not args.no_bad_channels)
 else:
     logger.info(f"Standardized file already exists: {standardized_file} - skipping destriping")
 
