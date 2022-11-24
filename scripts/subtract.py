@@ -100,7 +100,7 @@ if __name__ == "__main__":
     if args.geom is None:
         pass
     elif args.geom in ["np1", "np2"]:
-        from ibllib.ephys import neuropixel
+        import neuropixel
 
         print(
             f"Using the typical {args.geom} geometry. "

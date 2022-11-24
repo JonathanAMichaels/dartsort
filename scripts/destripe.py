@@ -6,25 +6,26 @@ from pathlib import Path
 from tqdm.auto import trange
 
 from neurodsp import voltage, utils
-from ibllib.io import spikeglx
+import spikeglx
 
 
 ap = argparse.ArgumentParser()
 
 ap.add_argument("input_binary")
-ap.add_argument("--no-bad-channels", action="store_true")
-
+ap.add_argument("--no-bad-channels", action="store_true", default=False)
+ap.add_argument("-o", "--output", default=None)
 args = ap.parse_args()
 
 
 binary = Path(args.input_binary)
 folder = binary.parent
-standardized_file = folder / f"destriped_{binary.name}"
+standardized_file = args.output or folder / f"destriped_{binary.name}"
 
 # run destriping
 sr = spikeglx.Reader(binary)
 h = sr.geometry
 if not standardized_file.exists():
+    standardized_file.parent.mkdir(parents=True, exist_ok=True)
     batch_size_secs = 1
     batch_intervals_secs = 50
     # scans the file at constant interval, with a demi batch starting offset
