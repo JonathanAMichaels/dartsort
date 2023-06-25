@@ -11,6 +11,8 @@ import shutil
 # %%
 from spike_psvae import (
     subtract,
+    filter_standardize,
+    post_processing_uhd,
     cluster_utils,
     cluster_viz_index,
     ibme,
@@ -53,17 +55,17 @@ if __name__ == "__main__":
     """
 
     # %%
-    raw_data_name = "binfile.bin" #raw rec location
-    dtype_raw = 'int16' #dtype of raw rec
-    output_all = "data_set_name" #everything will be saved here
+    raw_data_name = "/home/jonathan/pruszynski_data/Malfoy/101422/101422_g0/101422_g0_imec0/101422_g0_t0.imec0.ap.bin"  # raw rec location
+    dtype_raw = 'int16'  # dtype of raw rec
+    output_all = "/home/jonathan/pruszynski_data/Malfoy/101422/101422_g0/101422_g0_imec0/dartsort"  # everything will be saved here
     Path(output_all).mkdir(exist_ok=True)
-    geom_path = 'geom.npy' #path to geometry array
+    geom_path = '/home/jonathan/pruszynski_data/Malfoy/101422/101422_g0/101422_g0_imec0/dartsort/geom.npy'  # path to geometry array
     geom = np.load(geom_path)
     pitch = get_pitch(geom)
-    rec_len_sec = 4000 #length of rec in seconds
-    n_channels = 385 #number of channels (before preprocessing)
+    rec_len_sec = 4317  # length of rec in seconds 4317, 60
+    n_channels = 385  # number of channels (before preprocessing)
     sampling_rate = 30000
-    savefigs = True # To save summary figs at each step 
+    savefigs = True  # To save summary figs at each step
 
     # %%
     if savefigs:
@@ -79,10 +81,10 @@ if __name__ == "__main__":
 
     # %%
     #preprocessing parameters
-    preprocessing=True
+    preprocessing=False
     apply_filter=True
     n_channels_before_preprocessing=n_channels
-    channels_to_remove=[] #Typically the reference channel - IMPORTANT: make sure it is not included in the geometry array 
+    channels_to_remove=384 #Typically the reference channel - IMPORTANT: make sure it is not included in the geometry array
     low_frequency=300
     high_factor=0.1
     order=3
@@ -95,7 +97,7 @@ if __name__ == "__main__":
     n_sec_chunk_preprocessing=1
 
     # Initial Detection - Localization parameters 
-    detect_localize = True
+    detect_localize = False
     subh5_name = Path(output_all) / "initial_detect_localize/subtraction.h5" #This is in case detection has already been ran and we input the subtraction h5 file name here
     overwrite_detect=True
     t_start_detect = 0 #This is to run detection on full data, and then sort only a "good" portion (no artefacts)
@@ -109,7 +111,7 @@ if __name__ == "__main__":
     save_subtracted_tpca_projs = False
     save_cleaned_tpca_projs = True
     save_denoised_ptp_vectors = False
-    thresholds_subtract = [12, 10, 8, 6, 5, 4] #thresholds for subtraction
+    thresholds_subtract = [12, 10, 8] #thresholds for subtraction
     peak_sign = "both" #Important
     nn_detect=False
     denoise_detect=False
@@ -128,7 +130,7 @@ if __name__ == "__main__":
     loc_feature="peak"
 
     # Registration parameters 
-    registration=True
+    registration=False
     sigma_reg=0.1
     max_disp=100 # This is not the actual max displacement, we don't use paris of bins with relative disp>max_disp when computing full displacement 
     max_dt=250
@@ -136,7 +138,7 @@ if __name__ == "__main__":
     prior_lambda=1
 
     # Clustering parameters 
-    clustering=True
+    clustering=False
     t_start_clustering=0
     t_end_clustering=None # AVOID areas with artefacts in initial clustering (i.e. strokes etc...)
     len_chunks_cluster=300 # 5 min
@@ -149,12 +151,12 @@ if __name__ == "__main__":
 
     deconvolve=True
     t_start_deconv=0
-    t_end_deconv=None 
+    t_end_deconv=rec_len_sec
     n_sec_temp_update=t_end_deconv #Keep that to the full time - does not work for now :) 
     bin_size_um=pitch//8 
     adaptive_bin_size_selection=False
     n_jobs_deconv=8
-    n_jobs_extract_deconv=8
+    n_jobs_extract_deconv=8 # 4 works for short
     max_upsample=8
     refractory_period_frames=10
     min_spikes_bin=None
@@ -181,7 +183,7 @@ if __name__ == "__main__":
 
     if preprocessing:
         print("Preprocessing...")
-        preprocessing_dir = Path(output_all) / "preprocessing_test"
+        preprocessing_dir = Path(output_all) / "preprocessing"
         Path(preprocessing_dir).mkdir(exist_ok=True)
         if t_end_preproc is None:
             t_end_preproc=rec_len_sec
@@ -298,8 +300,10 @@ if __name__ == "__main__":
                 z,
                 spike_index[:, 0]/sampling_rate,
                 rigid=True, #This should be updated soon :) 
-                device=device,
-                pbar=False,
+                device=device_reg,
+                pbar=True,
+                bin_um=5.0,
+                bin_s=10.0
         )
 
         displacement_rigid = motion_est.displacement
@@ -309,6 +313,10 @@ if __name__ == "__main__":
     else:
         fname_disp = Path(detect_dir) / "displacement_rigid.npy"
         displacement_rigid = np.load(fname_disp)
+
+    displacement_rigid = np.interp(np.arange(t_start_detect, t_end_detect),
+                                   np.linspace(t_start_detect, t_end_detect, num=len(displacement_rigid),
+                                               endpoint=False), displacement_rigid)
 
     # %%
     if savefigs:
@@ -677,7 +685,7 @@ if __name__ == "__main__":
     x = localizations[:, 0]
     z_abs = localizations[:, 2]
 
-    labels_final = final_split_merge(spt, z_abs, x, displacement_rigid, geom, raw_data_name)
+    labels_final = post_processing_uhd.final_split_merge(spt, z_abs, x, displacement_rigid, geom, raw_data_name)
     np.save(Path(deconv_dir_all) / "labels_final.npy", labels_final)
         
         
