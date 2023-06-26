@@ -97,7 +97,7 @@ if __name__ == "__main__":
     n_sec_chunk_preprocessing=1
 
     # Initial Detection - Localization parameters 
-    detect_localize = False
+    detect_localize = True
     subh5_name = Path(output_all) / "initial_detect_localize/subtraction.h5" #This is in case detection has already been ran and we input the subtraction h5 file name here
     overwrite_detect=True
     t_start_detect = 0 #This is to run detection on full data, and then sort only a "good" portion (no artefacts)
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     save_subtracted_tpca_projs = False
     save_cleaned_tpca_projs = True
     save_denoised_ptp_vectors = False
-    thresholds_subtract = [12, 10, 8] #thresholds for subtraction
+    thresholds_subtract = [12, 10, 8, 6, 5] #thresholds for subtraction
     peak_sign = "both" #Important
     nn_detect=False
     denoise_detect=False
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     loc_feature="peak"
 
     # Registration parameters 
-    registration=False
+    registration=True
     sigma_reg=0.1
     max_disp=100 # This is not the actual max displacement, we don't use paris of bins with relative disp>max_disp when computing full displacement 
     max_dt=250
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     prior_lambda=1
 
     # Clustering parameters 
-    clustering=False
+    clustering=True
     t_start_clustering=0
     t_end_clustering=None # AVOID areas with artefacts in initial clustering (i.e. strokes etc...)
     len_chunks_cluster=300 # 5 min
@@ -155,8 +155,8 @@ if __name__ == "__main__":
     n_sec_temp_update=t_end_deconv #Keep that to the full time - does not work for now :) 
     bin_size_um=pitch//8 
     adaptive_bin_size_selection=False
-    n_jobs_deconv=8
-    n_jobs_extract_deconv=8 # 4 works for short
+    n_jobs_deconv=4 # 4-8 should be okay
+    n_jobs_extract_deconv=1 # 4 works for short
     max_upsample=8
     refractory_period_frames=10
     min_spikes_bin=None
