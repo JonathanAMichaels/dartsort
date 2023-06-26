@@ -546,9 +546,9 @@ def register(
     # TODO: upsample_to_histogram_bin
     assert not upsample_to_histogram_bin
 
-    thomas_kw = default_thomas_kw | thomas_kw
-    raster_kw = default_raster_kw | raster_kw
-    weights_kw = default_weights_kw | weights_kw
+    thomas_kw = dict(default_thomas_kw.items() | thomas_kw.items())
+    raster_kw = dict(default_raster_kw.items() | raster_kw.items())
+    weights_kw = dict(default_weights_kw.items() | weights_kw.items())
     raster_kw["bin_s"] = bin_s
     raster_kw["bin_um"] = bin_um
 

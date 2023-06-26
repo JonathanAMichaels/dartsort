@@ -97,7 +97,7 @@ if __name__ == "__main__":
     n_sec_chunk_preprocessing=1
 
     # Initial Detection - Localization parameters 
-    detect_localize = True
+    detect_localize = False
     subh5_name = Path(output_all) / "initial_detect_localize/subtraction.h5" #This is in case detection has already been ran and we input the subtraction h5 file name here
     overwrite_detect=True
     t_start_detect = 0 #This is to run detection on full data, and then sort only a "good" portion (no artefacts)
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     # Registration parameters 
     registration=True
     sigma_reg=0.1
-    max_disp=100 # This is not the actual max displacement, we don't use paris of bins with relative disp>max_disp when computing full displacement 
+    max_disp=20 # This is not the actual max displacement, we don't use paris of bins with relative disp>max_disp when computing full displacement 
     max_dt=250
     mincorr=0.6
     prior_lambda=1
