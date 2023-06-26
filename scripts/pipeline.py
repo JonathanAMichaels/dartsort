@@ -123,8 +123,8 @@ if __name__ == "__main__":
     n_sec_pca = 50
     n_sec_chunk_detect = 1
     nsync = 0
-    n_jobs_detect = 8 # set to 0 if multiprocessing doesn't work
-    n_loc_workers = 8 #recommend setting these to n_cpus/4
+    n_jobs_detect = 4 # set to 0 if multiprocessing doesn't work
+    n_loc_workers = 4 #recommend setting these to n_cpus/4
     localization_kind = "logbarrier"
     localize_radius = 100
     loc_feature="peak"
