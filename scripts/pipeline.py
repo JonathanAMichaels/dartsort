@@ -130,15 +130,15 @@ if __name__ == "__main__":
     loc_feature="peak"
 
     # Registration parameters 
-    registration=True
+    registration=False
     sigma_reg=0.1
-    max_disp=20 # This is not the actual max displacement, we don't use paris of bins with relative disp>max_disp when computing full displacement 
+    max_disp=20 # This is not the actual max displacement, we don't use paris of bins with relative disp>max_disp when computing full displacement
     max_dt=250
     mincorr=0.6
     prior_lambda=1
 
     # Clustering parameters 
-    clustering=True
+    clustering=False
     t_start_clustering=0
     t_end_clustering=None # AVOID areas with artefacts in initial clustering (i.e. strokes etc...)
     len_chunks_cluster=300 # 5 min
@@ -155,7 +155,7 @@ if __name__ == "__main__":
     n_sec_temp_update=t_end_deconv #Keep that to the full time - does not work for now :) 
     bin_size_um=pitch//8 
     adaptive_bin_size_selection=False
-    n_jobs_deconv=4 # 4-8 should be okay
+    n_jobs_deconv=2 # 4-8 should be okay
     n_jobs_extract_deconv=1 # 4 works for short
     max_upsample=8
     refractory_period_frames=10
