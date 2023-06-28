@@ -155,7 +155,7 @@ if __name__ == "__main__":
     n_sec_temp_update=t_end_deconv #Keep that to the full time - does not work for now :) 
     bin_size_um=pitch//8 
     adaptive_bin_size_selection=False
-    n_jobs_deconv=2 # 4-8 should be okay
+    n_jobs_deconv=1 # 4-8 should be okay
     n_jobs_extract_deconv=1 # 4 works for short
     max_upsample=8
     refractory_period_frames=10
