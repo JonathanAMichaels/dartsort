@@ -1,25 +1,25 @@
 # %%
-import numpy as np
-from scipy.spatial.distance import cdist
+import time
+from itertools import zip_longest
+from pathlib import Path
 
+import numpy as np
 # import numpy.linalg as la
 import torch
 import torch.nn.functional as F
-import time
-from pathlib import Path
-
+from scipy.spatial.distance import cdist
 from sklearn.decomposition import PCA
 from torch import nn
 from tqdm.auto import trange
 
-from .denoise_temporal_decrease import (
-    _enforce_temporal_decrease_right, _enforce_temporal_decrease_left
-)
+try:
+    from .denoise_temporal_decrease import (
+        _enforce_temporal_decrease_right, _enforce_temporal_decrease_left
+    )
+except ImportError:
+    pass
 
-from itertools import zip_longest
-from multiprocessing import Process, Manager
 
-import time
 pretrained_path = (
     Path(__file__).parent.parent / "pretrained/single_chan_denoiser.pt"
 )
