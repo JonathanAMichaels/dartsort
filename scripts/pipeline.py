@@ -55,11 +55,11 @@ if __name__ == "__main__":
     """
 
     # %%
-    raw_data_name = "/cifs/pruszynski/Malfoy/101422/101422_g0/101422_g0_imec0/101422_g0_t0.imec0.ap.bin"  # raw rec location
+    raw_data_name = "/home/jonathan/pruszynski_data/Malfoy/101422/101422_g0/101422_g0_imec0/101422_g0_t0.imec0.ap.bin"  # raw rec location
     dtype_raw = 'int16'  # dtype of raw rec
-    output_all = "/cifs/pruszynski/Malfoy/101422/101422_g0/101422_g0_imec0/dartsort"  # everything will be saved here
+    output_all = "/home/jonathan/pruszynski_data/Malfoy/101422/101422_g0/101422_g0_imec0/dartsort"  # everything will be saved here
     Path(output_all).mkdir(exist_ok=True)
-    geom_path = '/cifs/pruszynski/Malfoy/101422/101422_g0/101422_g0_imec0/dartsort/geom.npy'  # path to geometry array
+    geom_path = '/home/jonathan/pruszynski_data/Malfoy/101422/101422_g0/101422_g0_imec0/dartsort/geom.npy'  # path to geometry array
     geom = np.load(geom_path)
     pitch = get_pitch(geom)
     rec_len_sec = 4317  # length of rec in seconds 4317, 60
