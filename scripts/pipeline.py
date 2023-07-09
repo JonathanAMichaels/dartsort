@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     # %%
     #preprocessing parameters
-    preprocessing=False
+    preprocessing=True
     apply_filter=True
     n_channels_before_preprocessing=n_channels
     channels_to_remove=384 #Typically the reference channel - IMPORTANT: make sure it is not included in the geometry array
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     n_sec_chunk_preprocessing=1
 
     # Initial Detection - Localization parameters 
-    detect_localize = False
+    detect_localize = True
     subh5_name = Path(output_all) / "initial_detect_localize/subtraction.h5" #This is in case detection has already been ran and we input the subtraction h5 file name here
     overwrite_detect=True
     t_start_detect = 0 #This is to run detection on full data, and then sort only a "good" portion (no artefacts)
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     loc_feature="peak"
 
     # Registration parameters 
-    registration=False
+    registration=True
     sigma_reg=0.1
     max_disp=20 # This is not the actual max displacement, we don't use paris of bins with relative disp>max_disp when computing full displacement
     max_dt=250
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     prior_lambda=1
 
     # Clustering parameters 
-    clustering=False
+    clustering=True
     t_start_clustering=0
     t_end_clustering=None # AVOID areas with artefacts in initial clustering (i.e. strokes etc...)
     len_chunks_cluster=300 # 5 min
